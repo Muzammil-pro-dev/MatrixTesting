@@ -1,0 +1,51 @@
+name: Matrix Testing and Artifacts
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  # 1. Test Job: Yeh Node 16, 18, aur 20 par parallel (ek sath) chalega
+  test-matrix:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [16, 18, 20]
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # Har bar matrix ke mutabik naya Node version load hoga
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Run Tests
+        run: npm test
+
+  # 2. Build Job: Yeh sirf tab chalega jab upar ke teeno tests pass honge
+  build-and-store:
+    runs-on: ubuntu-latest
+    needs: test-matrix # Yeh test-matrix ka wait karega
+    
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # Hamare package.json ki build script run karega (dist/ folder banayega)
+      - name: Build Application
+        run: npm run build
+
+      # dist/ folder ko GitHub par upload/save karne ke liye action
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: production-build-output
+          path: dist/ 

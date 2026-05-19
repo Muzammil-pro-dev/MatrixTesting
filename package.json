@@ -1,0 +1,14 @@
+{
+  "name": "matrix-testing",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 0",
+    "build": "mkdir dist && echo \"Ready for production! Generated in 2026.\" > dist/index.html"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs"
+}
